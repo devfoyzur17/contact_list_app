@@ -23,20 +23,20 @@ class ContactModel {
 
 List<ContactModel> contactListData = [
   ContactModel(
-      name: "Foyzur Rahaman",
+      name: "Rokeya",
       mobile: "01701406710",
       id: 1,
       dateOfBirth: "01/10/2001",
-      email: "foyzur17@gmail.com",
-      gender: "Male",
+      email: "rokeya@gmail.com",
+      gender: "Female",
       streetAddredd: "Mirpur10, Dhaka",
-      website: "devfoyzur.com"),
+      website: "www.google.com"),
   ContactModel(
-      name: "Rasel Hossen",
+      name: "Kabila",
       mobile: "01745372849",
       id: 1,
       dateOfBirth: "21/30/2001",
-      email: "rasel123@gmail.com",
+      email: "kabila@gmail.com",
       gender: "Male",
       streetAddredd: "Mirpur10, Dhaka",
       website: "devrasel.com"),
