@@ -2,8 +2,10 @@
 
 import 'dart:io';
 
+import 'package:contact_list_app/models/contact_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 class NewContactPage extends StatefulWidget {
   static const routeName = "/new-contact-page";
@@ -20,14 +22,15 @@ class _NewContactPageState extends State<NewContactPage> {
   final streetAddressController = TextEditingController();
   final websiteController = TextEditingController();
   String groupValue = "";
+  String? dateOfBirth;
 
   @override
   void dispose() {
-     nameController.dispose();
-     mobileController.dispose();
-     emailController.dispose();
-     streetAddressController.dispose();
-     websiteController.dispose();
+    nameController.dispose();
+    mobileController.dispose();
+    emailController.dispose();
+    streetAddressController.dispose();
+    websiteController.dispose();
     super.dispose();
   }
 
@@ -36,7 +39,10 @@ class _NewContactPageState extends State<NewContactPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("New Contact")),
+      appBar: AppBar(
+        title: Text("New Contact"),
+        actions: [IconButton(onPressed: _saveContact, icon: Icon(Icons.save))],
+      ),
       body: Container(
         margin: const EdgeInsets.all(10.0),
         child: ListView(
@@ -114,167 +120,246 @@ class _NewContactPageState extends State<NewContactPage> {
                         )))
               ],
             ),
-            SizedBox(height: 15,),
-
+            SizedBox(
+              height: 15,
+            ),
             TextField(
               controller: nameController,
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xffffe6e6),
-                        contentPadding: EdgeInsets.only(left: 10),
-                        focusColor: Colors.white,
-                        prefixIcon: Icon(
-                          Icons.account_circle_outlined,
-                          color: Colors.deepOrange,
-                        ),
-                        
-                        hintText: "Enter your full name",
-                        hintStyle: TextStyle(color: Colors.deepOrange),
-                        
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(20))),
+              style: TextStyle(
+                  color: Colors.deepOrange, fontWeight: FontWeight.w500),
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Color(0xffffe6e6),
+                  contentPadding: EdgeInsets.only(left: 10),
+                  focusColor: Colors.white,
+                  prefixIcon: Icon(
+                    Icons.account_circle_outlined,
+                    color: Colors.deepOrange,
                   ),
-
-
-                  
-            SizedBox(height: 15,),
-
+                  hintText: "Enter your full name",
+                  hintStyle: TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.normal),
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(20))),
+            ),
+            SizedBox(
+              height: 15,
+            ),
             TextField(
               controller: mobileController,
+              style: TextStyle(
+                  color: Colors.deepOrange, fontWeight: FontWeight.w500),
               keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xffffe6e6),
-                        contentPadding: EdgeInsets.only(left: 10),
-                        focusColor: Colors.white,
-                        
-                        prefixIcon: Icon(
-                          Icons.phone,
-                          color: Colors.deepOrange,
-                        ),
-                        
-                        hintText: "Enter your mobile number",
-                        hintStyle: TextStyle(color: Colors.deepOrange),
-                        
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(20))),
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Color(0xffffe6e6),
+                  contentPadding: EdgeInsets.only(left: 10),
+                  focusColor: Colors.white,
+                  prefixIcon: Icon(
+                    Icons.phone,
+                    color: Colors.deepOrange,
                   ),
-                  
-            SizedBox(height: 15,),
-
+                  hintText: "Enter your mobile number",
+                  hintStyle: TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.normal),
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(20))),
+            ),
+            SizedBox(
+              height: 15,
+            ),
             TextField(
               controller: emailController,
+              style: TextStyle(
+                  color: Colors.deepOrange, fontWeight: FontWeight.w500),
               keyboardType: TextInputType.emailAddress,
-
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xffffe6e6),
-                        contentPadding: EdgeInsets.only(left: 10),
-                        focusColor: Colors.white,
-                        prefixIcon: Icon(
-                          Icons.email_outlined,
-                          color: Colors.deepOrange,
-                        ),
-                        
-                        hintText: "Enter your email address",
-                        hintStyle: TextStyle(color: Colors.deepOrange),
-                        
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(20))),
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Color(0xffffe6e6),
+                  contentPadding: EdgeInsets.only(left: 10),
+                  focusColor: Colors.white,
+                  prefixIcon: Icon(
+                    Icons.email_outlined,
+                    color: Colors.deepOrange,
                   ),
-                  
-            SizedBox(height: 15,),
-
+                  hintText: "Enter your email address",
+                  hintStyle: TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.normal),
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(20))),
+            ),
+            SizedBox(
+              height: 15,
+            ),
             TextField(
               controller: websiteController,
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xffffe6e6),
-                        contentPadding: EdgeInsets.only(left: 10),
-                        focusColor: Colors.white,
-                        prefixIcon: Icon(
-                          Icons.language,
-                          color: Colors.deepOrange,
-                        ),
-                        
-                        hintText: "Enter your website link",
-                        hintStyle: TextStyle(color: Colors.deepOrange),
-                        
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(20))),
+              style: TextStyle(
+                  color: Colors.deepOrange, fontWeight: FontWeight.w500),
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Color(0xffffe6e6),
+                  contentPadding: EdgeInsets.only(left: 10),
+                  focusColor: Colors.white,
+                  prefixIcon: Icon(
+                    Icons.language,
+                    color: Colors.deepOrange,
                   ),
-
-
- SizedBox(height: 15,),
-
+                  hintText: "Enter your website link",
+                  hintStyle: TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.normal),
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(20))),
+            ),
+            SizedBox(
+              height: 15,
+            ),
             TextField(
               controller: streetAddressController,
-              
+              style: TextStyle(
+                  color: Colors.deepOrange, fontWeight: FontWeight.w500),
               maxLines: 1,
-                    decoration: InputDecoration(
-                        filled: true,
-                        fillColor: Color(0xffffe6e6),
-                        contentPadding: EdgeInsets.only(left: 10),
-                        focusColor: Colors.white,
-                        prefixIcon: Icon(
-                          Icons.location_city,
-                          color: Colors.deepOrange,
-                        ),
-                        
-                        hintText: "Enter your street address",
-                        hintStyle: TextStyle(color: Colors.deepOrange),
-                        
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(20))),
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Color(0xffffe6e6),
+                  contentPadding: EdgeInsets.only(left: 10),
+                  focusColor: Colors.white,
+                  prefixIcon: Icon(
+                    Icons.location_city,
+                    color: Colors.deepOrange,
                   ),
-
-                  SizedBox(height: 20,),
-                  Row(
-                    children: [
-                      Text("Gender:>>", style: TextStyle(fontSize: 17, fontWeight: FontWeight.w500, ),),
-                    SizedBox(width: 20,),
-                       Radio<String>(
-                          value: "Male",
-                          groupValue: groupValue,
-                          fillColor:MaterialStateColor.resolveWith((states) => groupValue == "Male" ? Colors.red: Colors.blue),
-                          onChanged: (value) {
-                            setState(() {
-                              groupValue = value as String;
-                            });
-                             
-                          },
-                         
+                  hintText: "Enter your street address",
+                  hintStyle: TextStyle(
+                      color: Colors.grey, fontWeight: FontWeight.normal),
+                  border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(20))),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30)),
+              color: Color(0xffffe6e6),
+              shadowColor: Color(0xffffe6e6),
+              elevation: 5,
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Gender:",
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          ListTile(
+                            contentPadding: EdgeInsets.all(0),
+                            title: Text(
+                              "Male",
+                              style: TextStyle(
+                                  color: groupValue == "Male"
+                                      ? Colors.red
+                                      : Colors.grey),
+                            ),
+                            leading: Radio<String>(
+                                value: "Male",
+                                groupValue: groupValue,
+                                fillColor: MaterialStateColor.resolveWith(
+                                    (states) => groupValue == "Male"
+                                        ? Colors.red
+                                        : Colors.grey),
+                                onChanged: (value) {
+                                  setState(() {
+                                    groupValue = value as String;
+                                  });
+                                }),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          ListTile(
+                            contentPadding: EdgeInsets.all(0),
+                            title: Text(
+                              "Female",
+                              style: TextStyle(
+                                  color: groupValue == "Female"
+                                      ? Colors.red
+                                      : Colors.grey),
+                            ),
+                            leading: Radio<String>(
+                              value: "Female",
+                              groupValue: groupValue,
+                              fillColor: MaterialStateColor.resolveWith(
+                                  (states) => groupValue == "Female"
+                                      ? Colors.red
+                                      : Colors.grey),
+                              onChanged: (value) {
+                                setState(() {
+                                  groupValue = value as String;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      height: 100,
+                      width: 1,
+                      color: Colors.grey,
+                    ),
+                    Expanded(
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Date of birth",
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
-                        
-                         Text("Male", style: TextStyle(color: groupValue == "Male" ? Colors.red: Colors.blue),),
-                           SizedBox(width: 10,),
-                       Radio<String>(
-                          value: "Female",
-                          groupValue: groupValue,
-                          fillColor:MaterialStateColor.resolveWith((states) => groupValue == "Female" ? Colors.red: Colors.blue),
-                          onChanged: (value) {
-                            setState(() {
-                              groupValue = value as String;
-                            });
-                             
-                          },
-                         
+                        SizedBox(
+                          height: 5,
                         ),
-                        
-                         Text("Female", style: TextStyle(color: groupValue == "Female" ? Colors.red: Colors.blue),)
-                    
-                    
-
-
-                    ],
-                  )
-
-
+                        Text(
+                          dateOfBirth == null
+                              ? "No date choisen!"
+                              : dateOfBirth.toString(),
+                          style: TextStyle(
+                              color: dateOfBirth == null
+                                  ? Colors.grey
+                                  : Colors.deepOrange),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        OutlinedButton(
+                            onPressed: _showDatePickerDialog,
+                            style: OutlinedButton.styleFrom(
+                                side: BorderSide(color: Colors.deepOrange),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20))),
+                            child: Text("Select date of birth"))
+                      ],
+                    )),
+                  ],
+                ),
+              ),
+            )
           ],
         ),
       ),
@@ -288,5 +373,36 @@ class _NewContactPageState extends State<NewContactPage> {
         imagePatch = pickedImage.path;
       });
     }
+  }
+
+  void _showDatePickerDialog() async {
+    DateTime? selectedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime(2000),
+        firstDate: DateTime(1971),
+        lastDate: DateTime.now());
+
+    if (selectedDate != null) {
+      setState(() {
+        dateOfBirth = DateFormat.yMMMEd().format(selectedDate);
+        
+      });
+    }
+  }
+
+  void _saveContact() {
+    final contact = ContactModel(
+      name: nameController.text,
+      mobile: mobileController.text,
+      dateOfBirth: dateOfBirth,
+      email: emailController.text,
+      gender: groupValue,
+      image: imagePatch,
+      streetAddredd: streetAddressController.text,
+      website: websiteController.text
+
+    );
+    contactListData.add(contact);
+    Navigator.of(context).pop();
   }
 }
