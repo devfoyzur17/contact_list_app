@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:contact_list_app/models/contact_model.dart';
 import 'package:contact_list_app/pages/new_contact_page.dart';
 import 'package:flutter/material.dart';
 
@@ -16,7 +17,13 @@ class _ContactListPageState extends State<ContactListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("ContactList")),
-      body: Container(),
+      body: ListView.builder(
+        itemCount: contactListData.length,
+        itemBuilder: (context, index) => ListTile(
+
+            title: Text(contactListData[index].name),
+
+      )),
       floatingActionButton: FloatingActionButton(
         elevation: 5,
         onPressed: () {
