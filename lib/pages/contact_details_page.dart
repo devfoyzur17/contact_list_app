@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, prefer_final_fields, unused_field
 
 import 'dart:io';
 
@@ -9,7 +9,9 @@ import 'package:url_launcher/url_launcher.dart';
 class ContactDetailsPage extends StatefulWidget {
   static const routeName = "/contact-details-page";
   final ContactModel contact;
-  ContactDetailsPage({Key? key, required this.contact}) : super(key: key);
+  final int index;
+  ContactDetailsPage({Key? key, required this.contact, required this.index})
+      : super(key: key);
 
   @override
   State<ContactDetailsPage> createState() => _ContactDetailsPageState();
@@ -18,6 +20,20 @@ class ContactDetailsPage extends StatefulWidget {
 class _ContactDetailsPageState extends State<ContactDetailsPage> {
   //late ContactModel contact;
   Size? size;
+  bool _editEmailState = false;
+  bool _editLocationState = false;
+  bool _editWebsiteState = false;
+  final emailController = TextEditingController();
+  final streetAddressController = TextEditingController();
+  final websiteController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    streetAddressController.dispose();
+    websiteController.dispose();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
@@ -32,6 +48,9 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
       appBar: AppBar(
         shadowColor: Colors.black,
         title: Text("Contact Details"),
+        actions: [
+          IconButton(onPressed: updateInformation, icon: Icon(Icons.save))
+        ],
       ),
       body: ListView(
         children: [
@@ -112,20 +131,27 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
             color: Color(0xffffebe6),
             shadowColor: Colors.black,
             child: ListTile(
-              title: Text(
-                widget.contact.email == null || widget.contact.email!.isEmpty
-                    ? "No email added!"
-                    : widget.contact.email.toString(),
-                style: widget.contact.email == null ||
-                        widget.contact.email!.isEmpty
-                    ? TextStyle(color: Colors.grey)
-                    : TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        letterSpacing: 1),
-              ),
+              title: _editEmailState
+                  ? cusstomTextField(
+                      "Enter your email", Icons.email_outlined, emailController)
+                  : Text(
+                      widget.contact.email == null ||
+                              widget.contact.email!.isEmpty
+                          ? "No email added!"
+                          : widget.contact.email.toString(),
+                      style: widget.contact.email == null ||
+                              widget.contact.email!.isEmpty
+                          ? TextStyle(color: Colors.grey)
+                          : TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              letterSpacing: 1),
+                    ),
               trailing: IconButton(
-                  onPressed: _makeEmail,
+                  onPressed: widget.contact.email!.isEmpty ||
+                          widget.contact.email == null
+                      ? editEmail
+                      : _makeEmail,
                   icon: widget.contact.email == null ||
                           widget.contact.email!.isEmpty
                       ? Icon(
@@ -145,21 +171,27 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
             color: Color(0xffffebe6),
             shadowColor: Colors.black,
             child: ListTile(
-              title: Text(
-                widget.contact.streetAddredd == null ||
-                        widget.contact.streetAddredd!.isEmpty
-                    ? "No location added!"
-                    : widget.contact.streetAddredd.toString(),
-                style: widget.contact.streetAddredd == null ||
-                        widget.contact.streetAddredd!.isEmpty
-                    ? TextStyle(color: Colors.grey)
-                    : TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        letterSpacing: 1),
-              ),
+              title: _editLocationState
+                  ? cusstomTextField("Enter your location", Icons.location_city,
+                      streetAddressController)
+                  : Text(
+                      widget.contact.streetAddredd == null ||
+                              widget.contact.streetAddredd!.isEmpty
+                          ? "No location added!"
+                          : widget.contact.streetAddredd.toString(),
+                      style: widget.contact.streetAddredd == null ||
+                              widget.contact.streetAddredd!.isEmpty
+                          ? TextStyle(color: Colors.grey)
+                          : TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              letterSpacing: 1),
+                    ),
               trailing: IconButton(
-                  onPressed: _makeCurrentLocation,
+                  onPressed: widget.contact.email!.isEmpty ||
+                          widget.contact.email == null
+                      ? editLocation
+                      : _makeCurrentLocation,
                   icon: widget.contact.streetAddredd == null ||
                           widget.contact.streetAddredd!.isEmpty
                       ? Icon(
@@ -179,21 +211,27 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
             color: Color(0xffffebe6),
             shadowColor: Colors.black,
             child: ListTile(
-              title: Text(
-                widget.contact.website == null ||
-                        widget.contact.website!.isEmpty
-                    ? "No website added!"
-                    : widget.contact.website.toString(),
-                style: widget.contact.website == null ||
-                        widget.contact.website!.isEmpty
-                    ? TextStyle(color: Colors.grey)
-                    : TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16,
-                        letterSpacing: 1),
-              ),
+              title: _editWebsiteState
+                  ? cusstomTextField(
+                      "Enter your website", Icons.language, websiteController)
+                  : Text(
+                      widget.contact.website == null ||
+                              widget.contact.website!.isEmpty
+                          ? "No website added!"
+                          : widget.contact.website.toString(),
+                      style: widget.contact.website == null ||
+                              widget.contact.website!.isEmpty
+                          ? TextStyle(color: Colors.grey)
+                          : TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              letterSpacing: 1),
+                    ),
               trailing: IconButton(
-                  onPressed: _makeWebsite,
+                  onPressed: widget.contact.email!.isEmpty ||
+                          widget.contact.email == null
+                      ? editWebsite
+                      : _makeWebsite,
                   icon: widget.contact.website == null ||
                           widget.contact.website!.isEmpty
                       ? Icon(
@@ -254,5 +292,61 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
     } else {
       throw "Something wrong";
     }
+  }
+
+  void editEmail() {
+    setState(() {
+      _editEmailState = !_editEmailState;
+    });
+  }
+
+  void editLocation() {
+    setState(() {
+      _editLocationState = !_editLocationState;
+    });
+  }
+
+  void editWebsite() {
+    setState(() {
+      _editWebsiteState = !_editWebsiteState;
+    });
+  }
+
+  void updateInformation() {
+  ContactModel updateData =  ContactModel(
+        name: widget.contact.name,
+        mobile: widget.contact.mobile,
+        dateOfBirth: widget.contact.dateOfBirth,
+        email: emailController.text,
+        gender: widget.contact.gender,
+        image: widget.contact.image,
+        streetAddredd: streetAddressController.text,
+        website: websiteController.text);
+
+       contactListData[widget.index]=updateData;
+
+    Navigator.of(context).pop();
+  }
+
+  Widget cusstomTextField(String hint, IconData icon, controller) {
+    return TextField(
+      controller: controller,
+      style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+      decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.black54,
+          contentPadding: EdgeInsets.only(left: 10),
+          focusColor: Colors.white,
+          hintText: hint,
+          prefixIcon: Icon(
+            icon,
+            color: Colors.white,
+          ),
+          hintStyle:
+              TextStyle(color: Colors.grey, fontWeight: FontWeight.normal),
+          border: OutlineInputBorder(
+              borderSide: BorderSide.none,
+              borderRadius: BorderRadius.circular(10))),
+    );
   }
 }

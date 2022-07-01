@@ -73,6 +73,7 @@ class _ContactListPageState extends State<ContactListPage> {
 
              
               return  ContactDetailsPage(
+                index: index,
                    contact: contactListData[index],
               );
 
