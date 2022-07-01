@@ -8,19 +8,20 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ContactDetailsPage extends StatefulWidget {
   static const routeName = "/contact-details-page";
-  const ContactDetailsPage({Key? key}) : super(key: key);
+  final ContactModel contact;
+  ContactDetailsPage({Key? key, required this.contact}) : super(key: key);
 
   @override
   State<ContactDetailsPage> createState() => _ContactDetailsPageState();
 }
 
 class _ContactDetailsPageState extends State<ContactDetailsPage> {
-  late ContactModel contact;
+  //late ContactModel contact;
   Size? size;
 
   @override
   void didChangeDependencies() {
-    contact = ModalRoute.of(context)!.settings.arguments as ContactModel;
+    //contact = ModalRoute.of(context)!.settings.arguments as ContactModel;
     super.didChangeDependencies();
   }
 
@@ -46,20 +47,20 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(100),
-                    child: contact.image == null
-                        ? (contact.gender == "Male"
-                            ? Image.asset("assets/images/male.png",
+                    child: widget.contact.image == null
+                        ? (widget.contact.gender == "Female"
+                            ? Image.asset("assets/images/female.png",
                                 height: 200, width: 200, fit: BoxFit.cover)
-                            : Image.asset("assets/images/female.png",
+                            : Image.asset("assets/images/male.png",
                                 height: 200, width: 200, fit: BoxFit.cover))
-                        : Image.file(File(contact.image.toString()),
+                        : Image.file(File(widget.contact.image.toString()),
                             height: 200, width: 200, fit: BoxFit.cover),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   Text(
-                    contact.name,
+                    widget.contact.name,
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -79,7 +80,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
             shadowColor: Colors.black,
             child: ListTile(
               title: Text(
-                contact.mobile,
+                widget.contact.mobile,
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 16,
@@ -112,10 +113,11 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
             shadowColor: Colors.black,
             child: ListTile(
               title: Text(
-                contact.email == null || contact.email!.isEmpty
+                widget.contact.email == null || widget.contact.email!.isEmpty
                     ? "No email added!"
-                    : contact.email.toString(),
-                style: contact.email == null || contact.email!.isEmpty
+                    : widget.contact.email.toString(),
+                style: widget.contact.email == null ||
+                        widget.contact.email!.isEmpty
                     ? TextStyle(color: Colors.grey)
                     : TextStyle(
                         fontWeight: FontWeight.w500,
@@ -124,7 +126,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
               ),
               trailing: IconButton(
                   onPressed: _makeEmail,
-                  icon: contact.email == null || contact.email!.isEmpty
+                  icon: widget.contact.email == null ||
+                          widget.contact.email!.isEmpty
                       ? Icon(
                           Icons.edit,
                           color: Colors.black87,
@@ -143,11 +146,12 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
             shadowColor: Colors.black,
             child: ListTile(
               title: Text(
-                contact.streetAddredd == null || contact.streetAddredd!.isEmpty
+                widget.contact.streetAddredd == null ||
+                        widget.contact.streetAddredd!.isEmpty
                     ? "No location added!"
-                    : contact.streetAddredd.toString(),
-                style: contact.streetAddredd == null ||
-                        contact.streetAddredd!.isEmpty
+                    : widget.contact.streetAddredd.toString(),
+                style: widget.contact.streetAddredd == null ||
+                        widget.contact.streetAddredd!.isEmpty
                     ? TextStyle(color: Colors.grey)
                     : TextStyle(
                         fontWeight: FontWeight.w500,
@@ -156,8 +160,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
               ),
               trailing: IconButton(
                   onPressed: _makeCurrentLocation,
-                  icon: contact.streetAddredd == null ||
-                          contact.streetAddredd!.isEmpty
+                  icon: widget.contact.streetAddredd == null ||
+                          widget.contact.streetAddredd!.isEmpty
                       ? Icon(
                           Icons.edit,
                           color: Colors.black87,
@@ -176,10 +180,12 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
             shadowColor: Colors.black,
             child: ListTile(
               title: Text(
-                contact.website == null || contact.website!.isEmpty
+                widget.contact.website == null ||
+                        widget.contact.website!.isEmpty
                     ? "No website added!"
-                    : contact.website.toString(),
-                style: contact.website == null || contact.website!.isEmpty
+                    : widget.contact.website.toString(),
+                style: widget.contact.website == null ||
+                        widget.contact.website!.isEmpty
                     ? TextStyle(color: Colors.grey)
                     : TextStyle(
                         fontWeight: FontWeight.w500,
@@ -188,7 +194,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
               ),
               trailing: IconButton(
                   onPressed: _makeWebsite,
-                  icon: contact.website == null || contact.website!.isEmpty
+                  icon: widget.contact.website == null ||
+                          widget.contact.website!.isEmpty
                       ? Icon(
                           Icons.edit,
                           color: Colors.black87,
@@ -205,7 +212,7 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   }
 
   void _makePhoneCall() async {
-    final url = Uri(scheme: 'tel', path: contact.mobile);
+    final url = Uri(scheme: 'tel', path: widget.contact.mobile);
     if (await canLaunchUrl(url)) {
       launchUrl(url);
     } else {
@@ -214,16 +221,16 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   }
 
   void _makeEmail() async {
-    final url = Uri(scheme: 'mailto', path: contact.email);
-    if ( url != null) {
-    await  launchUrl(url);
+    final url = Uri(scheme: 'mailto', path: widget.contact.email);
+    if (url != null) {
+      await launchUrl(url);
     } else {
       throw "Something wrong";
     }
   }
 
   void _makeMesage() async {
-    final url = Uri(scheme: 'sms', path: contact.mobile);
+    final url = Uri(scheme: 'sms', path: widget.contact.mobile);
     if (await canLaunchUrl(url)) {
       launchUrl(url);
     } else {
@@ -232,17 +239,17 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
   }
 
   void _makeWebsite() async {
-    final url = Uri(scheme: 'https', path: contact.website);
-    if (url !=null) {
+    final url = Uri(scheme: 'https', path: widget.contact.website);
+    if (url != null) {
       launchUrl(url);
     } else {
       throw "Something wrong";
     }
   }
-  
+
   void _makeCurrentLocation() async {
-    final url = Uri.parse("geo:0,0?q=${contact.streetAddredd}");
-    if (url !=null) {
+    final url = Uri.parse("geo:0,0?q=${widget.contact.streetAddredd}");
+    if (url != null) {
       launchUrl(url);
     } else {
       throw "Something wrong";

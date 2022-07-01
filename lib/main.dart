@@ -25,8 +25,7 @@ class MyApp extends StatelessWidget {
       initialRoute: ContactListPage.routeName,
       routes: {
         ContactListPage.routeName :(context) => ContactListPage(),
-        NewContactPage.routeName :(context) => NewContactPage(),
-        ContactDetailsPage.routeName :(context) => ContactDetailsPage(),
+        NewContactPage.routeName :(context) => NewContactPage(), 
       },
     );
   }
