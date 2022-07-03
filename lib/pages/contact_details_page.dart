@@ -3,7 +3,9 @@
 import 'dart:io';
 
 import 'package:contact_list_app/models/contact_model.dart';
+import 'package:contact_list_app/providers/contact_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactDetailsPage extends StatefulWidget {
@@ -323,7 +325,8 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
         streetAddredd: streetAddressController.text,
         website: websiteController.text);
 
-       contactListData[widget.index]=updateData;
+        
+       Provider.of<ContactProvider>(context, listen: false).updateInformation(updateData, widget.index);
 
     Navigator.of(context).pop();
   }

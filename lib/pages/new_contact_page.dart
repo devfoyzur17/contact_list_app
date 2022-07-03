@@ -3,9 +3,11 @@
 import 'dart:io';
 
 import 'package:contact_list_app/models/contact_model.dart';
+import 'package:contact_list_app/providers/contact_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class NewContactPage extends StatefulWidget {
   static const routeName = "/new-contact-page";
@@ -385,24 +387,21 @@ class _NewContactPageState extends State<NewContactPage> {
     if (selectedDate != null) {
       setState(() {
         dateOfBirth = DateFormat.yMMMEd().format(selectedDate);
-        
       });
     }
   }
 
   void _saveContact() {
     final contact = ContactModel(
-      name: nameController.text,
-      mobile: mobileController.text,
-      dateOfBirth: dateOfBirth,
-      email: emailController.text,
-      gender: groupValue,
-      image: imagePatch,
-      streetAddredd: streetAddressController.text,
-      website: websiteController.text
-
-    );
-    contactListData.add(contact);
+        name: nameController.text,
+        mobile: mobileController.text,
+        dateOfBirth: dateOfBirth,
+        email: emailController.text,
+        gender: groupValue,
+        image: imagePatch,
+        streetAddredd: streetAddressController.text,
+        website: websiteController.text);
+    Provider.of<ContactProvider>(context, listen: false).addContact(contact);
     Navigator.of(context).pop();
   }
 }
